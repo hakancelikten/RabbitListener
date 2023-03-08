@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  rabbitservice:
+    image: ${DOCKER_REGISTRY-}rabbitservice
+    build:
+      context: .
+      dockerfile: src/Services/RabbitService/RabbitListener/Dockerfile
+
+  s_rabbitmq:
+    container_name: c_rabbitmq
+    image: rabbitmq:3-management
+    hostname: "host.docker.internal"
+    labels:
+      NAME: "rabbitmq"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"    
