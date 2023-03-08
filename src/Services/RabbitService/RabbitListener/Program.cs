@@ -28,6 +28,7 @@ namespace RabbitListener
 
             var mediator = sp.GetRequiredService<IMediator>();
             #endregion
+
             var urlOperation = new UrlRepoOperation(mediator);
 
             var address = urlOperation.getAllUrl();
