@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RabbitListener.Application.Interfaces.Repositories;
+using RabbitListener.Application.Interfaces.Services;
 using RabbitListener.Infrastructure.Repositories;
+using RabbitListener.Infrastructure.Services;
 
 namespace RabbitListener.Infrastructure
 {
@@ -27,6 +29,7 @@ namespace RabbitListener.Infrastructure
             //dbContext.Database.Migrate();
 
             services.AddScoped<IUrlRepository, UrlRepository>();
+            services.AddScoped<IUrlService, UrlService>();
 
             return services;
         }

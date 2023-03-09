@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using RabbitListener.Application.Features.Queries.Url.GetAllUrl;
 using RabbitListener.Application.Interfaces.Services;
 
 namespace RabbitListener.Application.Features.Queries.Url.CheckAllUrl

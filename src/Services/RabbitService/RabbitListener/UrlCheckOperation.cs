@@ -20,7 +20,7 @@ namespace RabbitListener
             {
                 Address = p.UrlAddress
             }).ToList();
-
+            var a = new CheckAllUrlQueryRequest() { urlCheckList = urlCheckList };
             return await mediator.Send(new CheckAllUrlQueryRequest() { urlCheckList = urlCheckList });
         }
 

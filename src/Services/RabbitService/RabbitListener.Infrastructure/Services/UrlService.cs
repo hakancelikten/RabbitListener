@@ -1,5 +1,6 @@
 ﻿using RabbitListener.Application.DTOs;
 using RabbitListener.Application.Interfaces.Services;
+using System.Net;
 
 namespace RabbitListener.Infrastructure.Services
 {
@@ -10,7 +11,7 @@ namespace RabbitListener.Infrastructure.Services
         {
             foreach (var item in urlCheckList)
             {
-                var res = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, item.ToString()));
+                var res = client.Send(new HttpRequestMessage(HttpMethod.Head, item.Address.ToString()));
                 item.StatusCode = res.StatusCode.ToString();
             }
             return urlCheckList;
