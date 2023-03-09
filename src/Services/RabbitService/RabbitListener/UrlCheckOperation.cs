@@ -2,7 +2,6 @@
 using RabbitListener.Application.DTOs;
 using RabbitListener.Application.Features.Queries.Url.CheckAllUrl;
 using RabbitListener.Application.Features.Queries.Url.GetAllUrl;
-using RabbitListener.Domain.Entities;
 
 namespace RabbitListener
 {
