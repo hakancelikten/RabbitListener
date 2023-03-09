@@ -14,9 +14,9 @@ namespace RabbitListener.Application.Features.Queries.Url.CheckAllUrl
 
         public async Task<CheckAllUrlQueryResponse> Handle(CheckAllUrlQueryRequest request, CancellationToken cancellationToken)
         {
-            var res = await _urlService.CheckAllUrl(request.urlCheckList);
+            var res = await _urlService.CheckAllUrl(request.UrlCheckList);
 
-            return new CheckAllUrlQueryResponse() { urlCheckList = res };
+            return new CheckAllUrlQueryResponse() { UrlCheckList = res };
         }
     }
 }

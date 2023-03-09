@@ -5,7 +5,7 @@ namespace RabbitListener.Application.Features.Queries.Url.CheckAllUrl
 {
     public class CheckAllUrlQueryResponse
     {
-        public List<UrlCheckObject> urlCheckList;
+        public List<UrlCheckObject> UrlCheckList;
 
     }
 }
