@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitListener.Application.Features.Queries.GetAllUrl
+namespace RabbitListener.Application.Features.Queries.Url.GetAllUrl
 {
     public class GetAllUrlQueryResponse
     {
-        public List<string> UrlAddress { get; set; }
+        public string UrlAddress { get; set; }
     }
 }

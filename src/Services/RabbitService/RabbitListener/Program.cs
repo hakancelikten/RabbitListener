@@ -4,6 +4,7 @@ using EventBus.Factory;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitListener.Application;
+using RabbitListener.Application.DTOs;
 using RabbitListener.Application.IntegrationEvents.EventHandlers;
 using RabbitListener.Application.IntegrationEvents.Events;
 using RabbitListener.Infrastructure;
@@ -20,6 +21,7 @@ namespace RabbitListener
             ConfigureService(services);
 
             #region ServiceProvider
+
             var sp = services.BuildServiceProvider();
 
             var eventBus = sp.GetRequiredService<IEventBus>();
@@ -27,17 +29,23 @@ namespace RabbitListener
             eventBus.Subscribe<UrlListenerCreatedIntegrationEvent, UrlListenerCreatedIntegrationEventHandler>();
 
             var mediator = sp.GetRequiredService<IMediator>();
+
             #endregion
+
+            #region Operations
 
             var urlOperation = new UrlRepoOperation(mediator);
 
             var address = urlOperation.getAllUrl();
 
-            var healthCheckOperation = new UrlCheckOperation(address.Result.UrlAddress.ToList());
+            var urlCheckOperation = new UrlCheckOperation(mediator);
 
-            var logObject = healthCheckOperation.GetStatusCode();
+            var logObjects = urlCheckOperation.checkAllUrl(address.Result);
+
+            #endregion
 
             Console.WriteLine("Application is running....");
+
             Console.ReadLine();
 
         }

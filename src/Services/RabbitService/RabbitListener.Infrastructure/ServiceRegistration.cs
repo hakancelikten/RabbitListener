@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using RabbitListener.Application.Interfaces.Repositories;
-using RabbitListener.Infrastructure.Context;
 using RabbitListener.Infrastructure.Repositories;
 
 namespace RabbitListener.Infrastructure

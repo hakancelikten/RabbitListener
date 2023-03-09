@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using RabbitListener.Application.Features.Queries.GetAllUrl;
-
+using RabbitListener.Application.Features.Queries.Url.GetAllUrl;
 
 namespace RabbitListener
 {
@@ -14,7 +13,7 @@ namespace RabbitListener
             this.mediator = mediator;
         }
 
-        public async Task<GetAllUrlQueryResponse> getAllUrl()
+        public async Task<List<GetAllUrlQueryResponse>> getAllUrl()
         {
             return await mediator.Send(new GetAllUrlQueryRequest());
         }

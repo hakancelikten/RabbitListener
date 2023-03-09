@@ -1,10 +1,5 @@
-﻿using RabbitListener.Domain.Entities;
-using RabbitListener.Domain.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RabbitListener.Application.Interfaces.Repositories.Common;
+using RabbitListener.Domain.Entities;
 
 namespace RabbitListener.Application.Interfaces.Repositories
 {

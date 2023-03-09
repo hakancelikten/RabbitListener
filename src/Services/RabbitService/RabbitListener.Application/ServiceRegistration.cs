@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitListener.Application.Mapping.UrlMapping;
-using System;
 using System.Reflection;
 
 namespace RabbitListener.Application

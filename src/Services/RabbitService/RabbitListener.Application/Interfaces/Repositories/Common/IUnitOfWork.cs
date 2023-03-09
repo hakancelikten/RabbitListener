@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace RabbitListener.Domain.Entities.Common
-
+﻿
+namespace RabbitListener.Application.Interfaces.Repositories.Common
 {
     public interface IUnitOfWork : IDisposable
     {

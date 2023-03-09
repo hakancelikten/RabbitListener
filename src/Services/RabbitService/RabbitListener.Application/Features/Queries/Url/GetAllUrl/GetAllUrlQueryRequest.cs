@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitListener.Application.Features.Queries.GetAllUrl
+namespace RabbitListener.Application.Features.Queries.Url.GetAllUrl
 {
-    public class GetAllUrlQueryRequest : IRequest<GetAllUrlQueryResponse>
+    public class GetAllUrlQueryRequest : IRequest<List<GetAllUrlQueryResponse>>
     {
     }
 }

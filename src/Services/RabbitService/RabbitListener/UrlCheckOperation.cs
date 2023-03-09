@@ -1,26 +1,28 @@
-﻿namespace RabbitListener
+﻿using MediatR;
+using RabbitListener.Application.DTOs;
+using RabbitListener.Application.Features.Queries.Url.CheckAllUrl;
+using RabbitListener.Application.Features.Queries.Url.GetAllUrl;
+using RabbitListener.Domain.Entities;
+
+namespace RabbitListener
 {
     public class UrlCheckOperation
     {
-        private static readonly HttpClient client = new HttpClient();
+        IMediator mediator;
 
-        private List<string> address;
-
-        private List<LogObject> logObject = new List<LogObject>();
-
-        public UrlCheckOperation(List<string> address)
+        public UrlCheckOperation(IMediator mediator)
         {
-            this.address = address;
+            this.mediator = mediator;
         }
 
-        public List<LogObject> GetStatusCode()
+        public async Task<CheckAllUrlQueryResponse> checkAllUrl(List<GetAllUrlQueryResponse> list)
         {
-            foreach (var item in address)
+            var urlCheckList = list.Select(p => new UrlCheckObject
             {
-                var res = client.Send(new HttpRequestMessage(HttpMethod.Head, item.ToString()));
-                logObject.Add(new LogObject() { Address = item.ToString(), StatusCode = res.StatusCode.ToString() });
-            }
-            return logObject;
+                Address = p.UrlAddress
+            }).ToList();
+
+            return await mediator.Send(new CheckAllUrlQueryRequest() { urlCheckList = urlCheckList });
         }
 
     }

@@ -4,16 +4,11 @@ using RabbitListener.Domain.Entities;
 using RabbitListener.Infrastructure.Context;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace RabbitListener.Infrastructure.Repositories
 {
     public class UrlRepository : GenericRepository<Url>, IUrlRepository
     {
-        /* Dummy data verebilmek için ezilmiştir. */
+        /* Dummy data dönebilmek için ezilmiştir. */
         public override Task<List<Url>> GetAll()
         {
             var list = new List<Url>()
