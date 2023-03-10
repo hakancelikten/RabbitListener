@@ -6,15 +6,14 @@ namespace RabbitListener.Infrastructure.Services
 {
     public class UrlService : IUrlService
     {
-        private readonly HttpClient client = new HttpClient();
-        public async Task<List<UrlCheckObject>> CheckAllUrl(List<UrlCheckObject> urlCheckList)
+        private readonly HttpClient _client = new HttpClient();
+        public Task<UrlCheckObject> CheckUrl(UrlCheckObject urlCheckObject)
         {
-            foreach (var item in urlCheckList)
-            {
-                var res = client.Send(new HttpRequestMessage(HttpMethod.Head, item.Address.ToString()));
-                item.StatusCode = res.StatusCode.ToString();
-            }
-            return urlCheckList;
+            var res = _client.Send(new HttpRequestMessage(HttpMethod.Head, urlCheckObject.Url));
+            urlCheckObject.StatusCode = res.StatusCode.ToString();
+
+            return Task.FromResult(urlCheckObject);
         }
+
     }
 }

@@ -1,57 +1,70 @@
-﻿using EventBus.Base;
+using EventBus.Base;
 using EventBus.Base.Abstraction;
 using EventBus.Factory;
 using MediatR;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 using RabbitListener.Application;
-using RabbitListener.Application.DTOs;
 using RabbitListener.Application.IntegrationEvents.EventHandlers;
 using RabbitListener.Application.IntegrationEvents.Events;
 using RabbitListener.Infrastructure;
 using RabbitMQ.Client;
 using Serilog;
-using Serilog.Core;
 using Serilog.Sinks.Elasticsearch;
-using System;
 using System.Reflection;
 using System.Text.Json;
 
-namespace RabbitListener
+namespace RabbitListener.UnitTest
 {
-    public class Program
+    [TestClass]
+    public class RabbitListenerTest
     {
-        static void Main(string[] args)
+        private IMediator _mediator;
+        private ILogger<Program> _logger;
+        private IServiceProvider _sp;
+        private IEventBus _eventBus;
+        private ServiceCollection _services;
+
+        //[TestMethod]
+        //public void subscribe_event_on_rabbitmq_test()
+        //{
+        //    _eventBus.Subscribe<urlsIntegrationEvent, urlsIntegrationEventHandler>();
+        //}
+
+        [TestMethod]
+        public void send_message_to_rabbitmq()
         {
-            ServiceCollection services = new();
+            var urlOperation = new UrlRepoOperation(_mediator);
+            var address = urlOperation.getAllUrl();
 
-            ConfigureService(services);
+            foreach (var item in address.Result.ToList())
+            {
+                _eventBus.Publish(new urlsIntegrationEvent(item.UrlAddress));
+            }
 
-            ConfigureLogging(services);
+        }
+
+        public RabbitListenerTest()
+        {
+            _services = new();
+
+            ConfigureService(_services);
+
+            ConfigureLogging(_services);
 
             #region ServiceProvider
 
-            var sp = services.BuildServiceProvider();
+            _sp = _services.BuildServiceProvider();
 
-            var eventBus = sp.GetRequiredService<IEventBus>();
+            _eventBus = _sp.GetRequiredService<IEventBus>();
 
-            var logger = sp.GetRequiredService<ILogger<Program>>();
+            _logger = _sp.GetRequiredService<ILogger<Program>>();
 
-            eventBus.Subscribe<urlsIntegrationEvent, urlsIntegrationEventHandler>();
-
-            var mediator = sp.GetRequiredService<IMediator>();
+            _mediator = _sp.GetRequiredService<IMediator>();
 
             #endregion
-
-            Console.WriteLine("Add Docker Compose support (docker-compose.yml)");
-            Console.WriteLine("RabbitMQ serving on 5672 port.Dashboard port number:15672. UserName:guest; Password:guest Topic Name:RMQ_Listener Queue Name:urls ");
-            Console.WriteLine("Kibana serving on 5601 port.");
-            Console.WriteLine("Elasticsearch serving on 9200 port. Messages send to Elasticsearch with serilog sink");
-            Console.ReadLine();
-
         }
         private static ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration, string environment)
         {
@@ -61,7 +74,7 @@ namespace RabbitListener
                 IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
             };
         }
-        private static void ConfigureLogging(IServiceCollection services)
+        private static void ConfigureLogging(IServiceCollection _services)
         {
             var environment = Environment.GetEnvironmentVariable("ASNETCORE_ENVIRONMENT");
 
@@ -82,23 +95,19 @@ namespace RabbitListener
                             .ReadFrom.Configuration(configuration)
                             .CreateLogger();
 
-            services.AddLogging(builder => builder.AddSerilog(Log.Logger));
+            _services.AddLogging(builder => builder.AddSerilog(Log.Logger));
 
             var serviceCollection = new ServiceCollection();
 
         }
-        static bool IsRunningInContainer => bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var inDocker) && inDocker;
-        private static void ConfigureService(IServiceCollection services)
+        private static void ConfigureService(IServiceCollection _services)
         {
-            services
+            _services
             .AddPersistenceRegistration()
             .AddApplicationRegistration();
+            _services.AddTransient<urlsIntegrationEventHandler>();
 
-            services.AddTransient<urlsIntegrationEventHandler>();
-
-            var host = IsRunningInContainer ? "host.docker.internal" : "localhost";
-
-            services.AddSingleton<IEventBus>(sp =>
+            _services.AddSingleton<IEventBus>(_sp =>
             {
                 EventBusConfig config = new()
                 {
@@ -109,14 +118,15 @@ namespace RabbitListener
                     EventBusType = EventBusType.RabbitMQ,
                     Connection = new ConnectionFactory()
                     {
-                        HostName = host,
+                        HostName = "localhost",
                         Port = 5672,
                         UserName = "guest",
                         Password = "guest"
                     }
                 };
-                return EventBusFactory.Create(config, sp);
+                return EventBusFactory.Create(config, _sp);
             });
         }
+
     }
 }

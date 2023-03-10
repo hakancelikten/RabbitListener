@@ -1,0 +1,71 @@
+ Uygulama, .Net 6 platformunda onion architecture ile yazılmıştır.
+ Message Broker olarak RabbitMQ kullanılmıştır.
+ Serilog sink ile Elasticsearch veritabanına log kayıtları gönderilmektedir.
+ Kibana ile logların gösterimi sağlanmaktadır.
+ HostPlan.txt dosyasında çalışan uygulamaların host edildiği username, port, password bilgileri bulunmaktadır.
+ 
+ src-->
+ BuildingBlocks klasörü:
+ Bu klasör aldında EventBus.Base,EventBus.Factory, EventBus.RabbitMQ adında 3 class library projesi bulunmaktadır.
+ 
+ EventBus.Factory: Bir adet factory sınıfını içerir. 
+ Buraya göndereceğimiz config parametresine göre kontrol eklenerek diğer message broker'ları kolaylıkla entegre edebiliriz.
+ Sadece rabbitmq değil diğer service bus sistemlerini de kullanabileceğimiz bir alt yapı hazırlanmıştır.(Amazon SQS, Azure Service Bus vb...)
+ 
+ EventBus.Base: Base operasyonları ve bunların interface'lerini içermektedir.
+ factory nesnesi üzerinden geçirilen config'e(EventBusConfig) göre yapılandırılması gerçekleşmektedir.
+ 
+ Örnek bir config yapılanması
+ EventBusConfig config = new()
+                {
+                    ConnectionRetryCount = 5, // subscribe UnSubscribe publish createConsumer gibi işlemlerde connectionFactory.CreateConnection işlemini poly ile denemektedir. Buradaki değere göre üstel bir şekilde bekleme süresi ekleyerek tekrar denemektedir.
+                    EventNameSuffix = "IntegrationEvent",//örneğin uygulamamızdaki event'imizin  adı urlsIntegrationEvent Burada belirlediğimiz suffix'i silecek ve url adında bir queue oluşturacaktır.
+                    DefaultTopicName = "RMQ_Listener", // Topic Name veriyoruz vermezsek "DefaultTopicName" adında bir topic üzerinde oluşturacaktır.
+                    SubscriberClientAppName = "",// Burada vereceğimiz string ifadeye göre queue oluşturacaktır. "RabbitListener" değeri verseydik RabbitListener.urls adında bir queue oluşturacaktı
+                    EventBusType = EventBusType.RabbitMQ, // Event bus için type belirleyebiliyoruz.
+                    Connection = new ConnectionFactory() // Gerekli connection bilgilerini veriyoruz.
+                    {
+                        HostName = "localhost",
+                        Port = 5672,
+                        UserName = "guest",
+                        Password = "guest"
+                    }
+                };
+ 
+ Not:Subscribe operasyonunda ilgili event için daha önce bir subscription işlemi var mı kontrolü ve connection kontrolünden sonra Queue declare edilmiştir.
+ Ardından verilen TopicName'e göre exchange'e bind edilmiştir. RoutingKey olarak eventName verilmiştir.
+ 
+ RabbitService klasörü:
+ 
+ İçerisinde RabitService isminde bir adet Console Application; 
+ RabitService.Application, RabitService.Infrastureture, RabitService.Domain adında 3 adet class library projesi bulunmaktadır.
+ 
+ RabitService console application, uygulamamızın ilk ayağa kalkan ve ilgili service'lerin register edildiği bir konsol uygulamasıdır.
+ Uygulama ayağa kalktığında urls kuyruğu dinlemeye başlamaktadır.
+ 
+ RabitService.Application projesi, uygulamadaki interface'leri bünyesinde barındıran soyutlama katmanımızdır.
+ Bu katmanda MediatR kütüphanesi ile CQRS pattern uygulanmıştır. query ve command'lar Features klasörünün altında ayrılmıştır.
+ IntegrationEvent klasöründe urlsIntegrationEventHandler ve urlsIntegrationEvent sınıfları bulunmaktadır.
+ Publish ve consume işlemlerinde bu class'lar kullanılmaktadır.
+ DTO ve Mapping nesneleri de bu katmanda bulunmaktadır.
+ 
+ RabitService.Domain projesinde BaseEntity sınıfı ve bir adet Url adında entity nesnesi bulunmaktadır.
+ 
+ RabitService.Infrastureture projesinde persistence ve infrastructure logic işlemleri burada yapılmaktadır.
+ Bu katmanda Services ve Repository adında 2 adet klasör bulunmaktadır.
+ Veriyle ilgili operasyonlar eğer database üzerinden yapılıyorsa Repository klasörü,
+ dış servisleri kullanıyorsak Services klasöründe yapılandırılmıştır.
+ Application katmanındaki ilgili interface sınıflarının concrete nesnelerini burada tanımlıyoruz.
+ Uygulamaya GenericRepository de dahil edilmiştir.
+ Uygulama ilk ayağa kalkarken seeding işlemi yapılmamıştır. Bunun yerine ilgili repo sınıfında dummy data verilmiştir.
+ Bu dummy data içerisinde url adresleri vardır(Test ederken verileri buradan alıp service bus'a publish ediyorum).
+ 
+ test-->
+ UnitTest klasörü:
+ RabbitListener adında bir Unit Test projesi oluşturulmuştur.
+ RabbitListenerTest sınıfında send_message_to_rabbitmq test metodu hazırlanmıştır.
+ İlgili repodan dummy data getirilip publish edilmiştir.
+ urlsIntegrationEventHandler sınıfındaki Handle metodunda handle edilmektedir
+ url adress'ler ilgili service sınıfına head request ile status code'ları alınmak üzere gönderilmek
+ status code'ları alınan url adres'lerin nesnesi Serialize edilerek istenilen formatta loglaması yapılmaktadır.
+ 

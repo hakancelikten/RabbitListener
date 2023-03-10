@@ -14,9 +14,9 @@ namespace RabbitListener.Infrastructure.Repositories
             var list = new List<Url>()
             {
                 new Url() { Id = Guid.NewGuid(), CreateDate = DateTime.UtcNow, UrlAddress = "https://www.akakce.com/brosurlerde-en-iyi-fiyatlar" },
-                new Url() { Id = Guid.NewGuid(), CreateDate = DateTime.UtcNow, UrlAddress = "https://www.akakce.com/son-alti-ayin-en-ucuz-fiyatli-urunleri" },
-                new Url() { Id = Guid.NewGuid(), CreateDate = DateTime.UtcNow, UrlAddress = "https://www.akakce.com/adetli-al-az-ode" },
-                new Url() { Id = Guid.NewGuid(), CreateDate = DateTime.UtcNow, UrlAddress = "https://www.akakce.com/en-cok-takip-edilen-urunler" },
+                new Url() { Id = Guid.NewGuid(), CreateDate = DateTime.UtcNow, UrlAddress = "https://www.akakce.com/televizyon.html" },
+                new Url() { Id = Guid.NewGuid(), CreateDate = DateTime.UtcNow, UrlAddress = "https://www.akakce.com/cep-telefonu.html" },
+                new Url() { Id = Guid.NewGuid(), CreateDate = DateTime.UtcNow, UrlAddress = "https://www.akakce.com" },
             };
             return Task.FromResult(list);
         }

@@ -8,7 +8,7 @@ namespace EventBus.Factory
     {
         public static IEventBus Create(EventBusConfig config, IServiceProvider serviceProvider)
         {
-            // Sadece RabbitMQ olduğu için default olarak rabbitmq dönmekteyim.
+            // Şuan için sadece RabbitMQ olduğu için default olarak rabbitmq dönmekteyim.
             return new EventBusRabbitMQ(config, serviceProvider);
 
         }

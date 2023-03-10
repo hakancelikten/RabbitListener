@@ -4,6 +4,6 @@ namespace RabbitListener.Application.Interfaces.Services
 {
     public interface IUrlService
     {
-        Task<List<UrlCheckObject>> CheckAllUrl(List<UrlCheckObject> urlCheckList);
+        Task<UrlCheckObject> CheckUrl(UrlCheckObject urlCheckObject);
     }
 }
