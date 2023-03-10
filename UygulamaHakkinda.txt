@@ -41,7 +41,7 @@
  RabitService.Application, RabitService.Infrastureture, RabitService.Domain adında 3 adet class library projesi bulunmaktadır.
  
  RabitService console application, uygulamamızın ilk ayağa kalkan ve ilgili service'lerin register edildiği bir konsol uygulamasıdır.
- Uygulama ayağa kalktığında urls kuyruğu dinlemeye başlamaktadır.
+ Uygulama ayağa kalktığında .urls kuyruğu dinlemeye başlamaktadır.
  
  RabitService.Application projesi, uygulamadaki interface'leri bünyesinde barındıran soyutlama katmanımızdır.
  Bu katmanda MediatR kütüphanesi ile CQRS pattern uygulanmıştır. query ve command'lar Features klasörünün altında ayrılmıştır.

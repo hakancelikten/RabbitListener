@@ -27,12 +27,6 @@ namespace RabbitListener.UnitTest
         private IEventBus _eventBus;
         private ServiceCollection _services;
 
-        //[TestMethod]
-        //public void subscribe_event_on_rabbitmq_test()
-        //{
-        //    _eventBus.Subscribe<urlsIntegrationEvent, urlsIntegrationEventHandler>();
-        //}
-
         [TestMethod]
         public void send_message_to_rabbitmq()
         {
@@ -43,9 +37,7 @@ namespace RabbitListener.UnitTest
             {
                 _eventBus.Publish(new urlsIntegrationEvent(item.UrlAddress));
             }
-
         }
-
         public RabbitListenerTest()
         {
             _services = new();
@@ -105,6 +97,7 @@ namespace RabbitListener.UnitTest
             _services
             .AddPersistenceRegistration()
             .AddApplicationRegistration();
+
             _services.AddTransient<urlsIntegrationEventHandler>();
 
             _services.AddSingleton<IEventBus>(_sp =>
@@ -127,6 +120,5 @@ namespace RabbitListener.UnitTest
                 return EventBusFactory.Create(config, _sp);
             });
         }
-
     }
 }

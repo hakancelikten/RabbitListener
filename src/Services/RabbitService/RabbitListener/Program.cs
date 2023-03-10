@@ -47,7 +47,7 @@ namespace RabbitListener
             #endregion
 
             Console.WriteLine("Add Docker Compose support (docker-compose.yml)");
-            Console.WriteLine("RabbitMQ serving on 5672 port.Dashboard port number:15672. UserName:guest; Password:guest Topic Name:RMQ_Listener Queue Name:urls ");
+            Console.WriteLine("RabbitMQ serving on 5672 port.Dashboard port number:15672. UserName:guest; Password:guest Topic Name:RMQ_Listener Queue Name:.urls RoutingKey:urls");
             Console.WriteLine("Kibana serving on 5601 port.");
             Console.WriteLine("Elasticsearch serving on 9200 port. Messages send to Elasticsearch with serilog sink");
             Console.ReadLine();
