@@ -4,8 +4,6 @@ using EventBus.Factory;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using RabbitListener.Application;
 using RabbitListener.Application.IntegrationEvents.EventHandlers;
 using RabbitListener.Application.IntegrationEvents.Events;
