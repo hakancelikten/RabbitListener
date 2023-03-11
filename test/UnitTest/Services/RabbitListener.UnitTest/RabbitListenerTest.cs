@@ -62,7 +62,7 @@ namespace RabbitListener.UnitTest
         }
         private static void ConfigureLogging(IServiceCollection _services)
         {
-            var environment = Environment.GetEnvironmentVariable("ASNETCORE_ENVIRONMENT");
+            var environment = Environment.GetEnvironmentVariable("ASNETCORE_ENVIRONMENT") ?? "Development";
 
             var configuration = new ConfigurationBuilder()
 
