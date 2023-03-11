@@ -14,7 +14,6 @@ using RabbitMQ.Client;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System.Reflection;
-using System.Text.Json;
 
 namespace RabbitListener.UnitTest
 {
@@ -22,7 +21,6 @@ namespace RabbitListener.UnitTest
     public class RabbitListenerTest
     {
         private IMediator _mediator;
-        private ILogger<Program> _logger;
         private IServiceProvider _sp;
         private IEventBus _eventBus;
         private ServiceCollection _services;
@@ -52,8 +50,6 @@ namespace RabbitListener.UnitTest
 
             _eventBus = _sp.GetRequiredService<IEventBus>();
 
-            _logger = _sp.GetRequiredService<ILogger<Program>>();
-
             _mediator = _sp.GetRequiredService<IMediator>();
 
             #endregion
@@ -72,7 +68,7 @@ namespace RabbitListener.UnitTest
 
             var configuration = new ConfigurationBuilder()
 
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: true)
             .AddJsonFile(
                 $"appsettings.{environment}.json",
                 optional: true)

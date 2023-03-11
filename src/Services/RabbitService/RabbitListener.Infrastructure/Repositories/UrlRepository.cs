@@ -1,9 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RabbitListener.Application.Interfaces.Repositories;
+﻿using RabbitListener.Application.Interfaces.Repositories;
 using RabbitListener.Domain.Entities;
-using RabbitListener.Infrastructure.Context;
-using System;
-using System.Collections.Generic;
 namespace RabbitListener.Infrastructure.Repositories
 {
     public class UrlRepository : GenericRepository<Url>, IUrlRepository

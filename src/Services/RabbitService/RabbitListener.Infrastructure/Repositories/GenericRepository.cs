@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RabbitListener.Application.Interfaces.Repositories.Common;
 using RabbitListener.Domain.Entities.Common;
 using System.Linq.Expressions;
@@ -23,6 +22,7 @@ namespace RabbitListener.Infrastructure.Repositories
 
             return entity;
         }
+
         public virtual Task<List<T>> Get(Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] includes)
         {
             return Get(filter, null, includes);
@@ -50,12 +50,9 @@ namespace RabbitListener.Infrastructure.Repositories
             return await query.ToListAsync();
         }
 
-
         public virtual async Task<List<T>> GetAll() => await _dbContext.Set<T>().ToListAsync();
 
-
         public virtual async Task<T> GetByIdAsync(Guid id) => await _dbContext.Set<T>().FindAsync(id);
-
 
         public virtual async Task<T> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes)
         {

@@ -21,7 +21,9 @@ namespace RabbitListener.Application.IntegrationEvents.EventHandlers
             {
                 Url = @event.Url
             };
+
             var res = _urlService.CheckUrl(urlCheckObject);
+
             Log.Information(JsonSerializer.Serialize(res.Result));
 
             return Task.CompletedTask;

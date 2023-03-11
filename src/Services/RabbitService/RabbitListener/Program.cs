@@ -2,23 +2,17 @@
 using EventBus.Base.Abstraction;
 using EventBus.Factory;
 using MediatR;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitListener.Application;
-using RabbitListener.Application.DTOs;
 using RabbitListener.Application.IntegrationEvents.EventHandlers;
 using RabbitListener.Application.IntegrationEvents.Events;
 using RabbitListener.Infrastructure;
 using RabbitMQ.Client;
 using Serilog;
-using Serilog.Core;
 using Serilog.Sinks.Elasticsearch;
-using System;
 using System.Reflection;
-using System.Text.Json;
 
 namespace RabbitListener
 {
@@ -53,19 +47,18 @@ namespace RabbitListener
             Console.ReadLine();
 
         }
+
         private static ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration, string environment)
         {
-            var a = new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
+            return new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
             {
                 AutoRegisterTemplate = true,
                 IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
             };
-            return a;
         }
 
         private static void ConfigureLogging(IServiceCollection services)
         {
-
             var environment = Environment.GetEnvironmentVariable("ASNETCORE_ENVIRONMENT") ?? "Development";
 
             var configuration = new ConfigurationBuilder()
@@ -85,7 +78,6 @@ namespace RabbitListener
                             .ReadFrom.Configuration(configuration)
                             .CreateLogger();
             services.AddLogging(builder => builder.AddSerilog(Log.Logger));
-            Log.Information("asdasd");
         }
         static bool IsRunningInContainer => bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var inDocker) && inDocker;
         private static void ConfigureService(IServiceCollection services)
