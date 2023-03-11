@@ -3,6 +3,8 @@ version: '3.4'
 services:
   rabbitservice:
     image: ${DOCKER_REGISTRY-}rabbitservice
+    stdin_open: true
+    tty: true
     build:
       context: .
       dockerfile: src/Services/RabbitService/RabbitListener/Dockerfile
@@ -29,6 +31,7 @@ services:
     - elasticsearch-data:/usr/share/elasticsearch/data
    environment:
     - xpack.monitoring.enabled=true
+    - xpack.security.enabled=false
     - xpack.watcher.enabled=false
     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     - discovery.type=single-node
@@ -52,4 +55,4 @@ networks:
     driver: bridge
 
 volumes:
-  elasticsearch-data:    
+  elasticsearch-data:

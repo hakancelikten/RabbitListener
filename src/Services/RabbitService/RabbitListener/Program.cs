@@ -55,14 +55,17 @@ namespace RabbitListener
         }
         private static ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration, string environment)
         {
-            return new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
+            var a = new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
             {
                 AutoRegisterTemplate = true,
                 IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
             };
+            return a;
         }
+
         private static void ConfigureLogging(IServiceCollection services)
         {
+
             var environment = Environment.GetEnvironmentVariable("ASNETCORE_ENVIRONMENT") ?? "Development";
 
             var configuration = new ConfigurationBuilder()
@@ -81,11 +84,8 @@ namespace RabbitListener
                             .WriteTo.Elasticsearch(ConfigureElasticSink(configuration, environment))
                             .ReadFrom.Configuration(configuration)
                             .CreateLogger();
-
             services.AddLogging(builder => builder.AddSerilog(Log.Logger));
-
-            var serviceCollection = new ServiceCollection();
-
+            Log.Information("asdasd");
         }
         static bool IsRunningInContainer => bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var inDocker) && inDocker;
         private static void ConfigureService(IServiceCollection services)

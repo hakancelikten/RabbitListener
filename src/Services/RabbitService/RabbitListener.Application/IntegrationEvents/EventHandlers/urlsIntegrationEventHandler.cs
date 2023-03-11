@@ -10,7 +10,6 @@ namespace RabbitListener.Application.IntegrationEvents.EventHandlers
     public class urlsIntegrationEventHandler : IIntegrationEventHandler<urlsIntegrationEvent>
     {
         private readonly IUrlService _urlService;
-
         public urlsIntegrationEventHandler(IUrlService urlService)
         {
             _urlService = urlService;
@@ -23,17 +22,8 @@ namespace RabbitListener.Application.IntegrationEvents.EventHandlers
                 Url = @event.Url
             };
             var res = _urlService.CheckUrl(urlCheckObject);
+            Log.Information(JsonSerializer.Serialize(res.Result));
 
-            try
-            {
-                Log.Information(JsonSerializer.Serialize(res.Result));
-
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
             return Task.CompletedTask;
 
         }
